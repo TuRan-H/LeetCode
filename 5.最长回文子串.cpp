@@ -10,48 +10,48 @@ using namespace std;
 // @lc code=start
 class Solution {
 public:
-	// Helper function to expand around a potential center and update the longest palindrome found
-	// It takes references to `current_max_start` and `current_max_len` to update them directly.
+	// 辅助函数：以潜在中心点扩展并更新找到的最长回文串
+	// 通过引用传递 `current_max_start` 和 `current_max_len` 来直接更新它们
 	void expandAndCheck(const std::string& s, int left_candidate, int right_candidate,
 		int& current_max_start, int& current_max_len)
 	{
 		int l = left_candidate;
 		int r = right_candidate;
 
-		// Expand while characters match and pointers are within bounds
+		// 当字符匹配且指针在边界内时继续扩展
 		while (l >= 0 && r < s.length() && s[l] == s[r]) {
 			l--;
 			r++;
 		}
 
-		// After the loop, the actual palindrome is s[l+1 ... r-1]
-		// Its length is (r-1) - (l+1) + 1 = r - l - 1
+		// 循环结束后，实际的回文串是 s[l+1 ... r-1]
+		// 它的长度是 (r-1) - (l+1) + 1 = r - l - 1
 		int current_palindrome_len = r - l - 1;
 
 		if (current_palindrome_len > current_max_len) {
 			current_max_len = current_palindrome_len;
-			current_max_start = l + 1; // Starting index of this new longest palindrome
+			current_max_start = l + 1; // 这个新的最长回文串的起始索引
 		}
 	}
 
 	std::string longestPalindrome(std::string s)
 	{
-		if (s.length() < 1) { // Or s.empty()
+		if (s.length() < 1) { // 或者使用 s.empty()
 			return "";
 		}
 
-		int res_start_idx = 0; // Start index of the longest palindrome found
-		int res_max_len = 1; // Length of the longest palindrome found (min length is 1 for a single char)
+		int res_start_idx = 0; // 找到的最长回文串的起始索引
+		int res_max_len = 1; // 找到的最长回文串的长度（单个字符的最小长度为1）
 
 		for (int i = 0; i < s.length(); ++i) {
-			// Case 1: Odd length palindromes
-			// Center is the character s[i]
+			// 情况1：奇数长度回文串
+			// 中心是字符 s[i]
 			expandAndCheck(s, i, i, res_start_idx, res_max_len);
 
-			// Case 2: Even length palindromes
-			// Center is between s[i] and s[i+1]
-			// The expandAndCheck helper is robust: if i+1 is out of bounds,
-			// the while loop condition (r < s.length()) will handle it correctly.
+			// 情况2：偶数长度回文串
+			// 中心在 s[i] 和 s[i+1] 之间
+			// expandAndCheck 辅助函数很健壮：如果 i+1 超出边界，
+			// while 循环条件 (r < s.length()) 会正确处理
 			expandAndCheck(s, i, i + 1, res_start_idx, res_max_len);
 		}
 
